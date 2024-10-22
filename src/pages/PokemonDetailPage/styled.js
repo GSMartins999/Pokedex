@@ -141,3 +141,41 @@ export const ContainerPokeMove = styled.div`
     justify-content: start;
     align-items: center;
 `
+
+export const Movies = styled.li`
+    width: auto;
+    height: auto;
+    background-color: green;
+`
+
+export const ProgressBarContainer = styled.div`
+  width: 100%; /* Garanta que ocupa 100% da largura do seu pai */
+  max-width: 307px; /* Ajuste para o mesmo tamanho das outras barras, se necessário */
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  position: relative;
+  margin: 10px 0;
+`;
+
+
+export const ProgressBarFiller = styled.div`
+    background-color: #76c7c0;
+    height: 20px;
+    border-radius: 5px;
+`;
+
+export const ProgressBarLabel = styled.span`
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    color: black;
+    font-weight: bold;
+`;
+
+export const Pokebola = styled.div`
+    width: 280px;
+    margin-top: 90px;
+    height: 150px;
+    color: red;
+    border: solid black 2px;
+`;
