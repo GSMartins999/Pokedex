@@ -231,12 +231,12 @@ export const DetailsPage = () => {
                   src={selectedPokemon.sprites?.other["official-artwork"].front_default}
                   alt={selectedPokemon.name}
                   style={{
-                    width: "100%", // Ajuste a largura conforme necessário
+                    width: "100%", 
                     height: "auto",
                     position: "absolute",
-                    top: "50%", // Ajuste para centralizar verticalmente
-                    left: "50%", // Ajuste para centralizar horizontalmente
-                    transform: "translate(-50%, -50%)", // Centraliza o elemento
+                    top: "50%",
+                    left: "50%", 
+                    transform: "translate(-50%, -50%)", 
                     zIndex: 1,
                   }}
                 />
