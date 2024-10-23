@@ -162,6 +162,8 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  
+
   return (
     <>
       <Container>
@@ -196,12 +198,20 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
           {location.pathname === "/" || location.pathname === "/pokedex" ? (
                        <Detalhes
                        onClick={() => {
+                         // Passando o nome e tipos diretamente pela navegação
                          setSelectedPokemon(pokemon);
-                         navigate(`/detalhes/${pokemon.name}`);
+                         navigate(`/detalhes/${pokemon.id}`, {
+                           state: {
+                             name: pokemon.name,
+                             types: pokemon.types.map(typeObj => typeObj.type.name), // Passa os tipos como array de strings
+                             id: pokemon.id
+                           }
+                         });
                        }}
                      >
                        <strong>Detalhes</strong>
                      </Detalhes>
+                     
           ) : (
               ""
             )}
