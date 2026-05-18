@@ -22,15 +22,15 @@ export const ModalOverlay = styled.div`
 export const ModalBox = styled.div`
   background: white;
   width: 90%;
-  max-width: 400px;
-  min-height: 190px;
-  border-radius: 12px;
+  max-width: 500px;
+  min-height: 240px;
+  border-radius: 16px;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 2.5rem 1.5rem;
+  padding: 3.5rem 2.5rem;
   box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
   animation: scaleUp 0.2s ease-out;
 
@@ -40,14 +40,14 @@ export const ModalBox = styled.div`
   }
 
   h2 {
-    font-size: 2.6rem;
+    font-size: 3.2rem;
     font-weight: 900;
     color: #1a1a1a;
-    margin: 0 0 0.8rem 0;
+    margin: 0 0 1rem 0;
   }
 
   p {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #1a1a1a;
     margin: 0;

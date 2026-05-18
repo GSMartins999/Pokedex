@@ -24,7 +24,7 @@ export const ContainerTexto = styled.div`
 
 export const Containerzao = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
   gap: 3rem 2rem;
   width: 100%;
   max-width: 1400px;
