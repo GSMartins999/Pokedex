@@ -45,19 +45,17 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
   const context = useContext(GlobalContext);
   const { addToPokedex, removeFromPokedex, setSelectedPokemon } = context;
 
-  const getAtributos = async () => {
-    try {
-      const response = await axios.get(pokemonsUrl);
-      setPokemon(response.data);
-    } catch (error) {
-      console.log("Error", error.response);
-    }
-  };
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    const getAtributos = async () => {
+      try {
+        const response = await axios.get(pokemonsUrl);
+        setPokemon(response.data);
+      } catch (error) {
+        console.log("Error", error.response);
+      }
+    };
     getAtributos();
-  }, []);
+  }, [pokemonsUrl]);
 
   const type = pokemon.types;
 
