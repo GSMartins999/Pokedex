@@ -1,186 +1,203 @@
 import styled from "styled-components";
 
 const getColors = {
-    "water": "#71C3FF" ,
-    "bug" : "#76A866",
-    "dark": "#A79FA6",
-    "dragon": "#004170",
-    'electric': '#F2E7AA',
-    'fairy': '#E9CDEA',
-    'fighting': '#D88EAB',
-    'fire':'#EAAB7D',
-    'flying': '#A4B8C9',
-    'ghost':'#9B9FB9',
-    'grass':'#729F92',
-    'ground': '#E1A48A',
-    'ice':'#B5DCD5',
-  'normal':'#BF9762',
-  'poison':'#C5A9C4',
-  'psychic':'#F3A9A9',
-   'rock':'#D2CAB3',
-   'steel': '#C8C8C8'
-  }
-
-
-const getColorsTipos = {
-    'normal': '#A8A878',
-    'fire': '#F08030',
-    'fighting': '#C03028',
-    'water': '#6890F0',
-    'flying': '#A890F0',
-    'grass': '#78C850',
-    'poison': '#A040A0',
-    'electric': '#F8D030',
-    'ground': '#E0C068',
-    'rock': '#B8A038',
-    'ice': '#98D8D8',
-    'bug': '#A8B820',
-    'ghost': '#705898',
-    'steel': '#B8B8D0',
-    'dragon': '#7038F8',
-    'dark': '#705848',
-    'fairy': '#EE99AC',
-  };
-
-
+  water: "#71C3FF",
+  bug: "#76A866",
+  dark: "#A79FA6",
+  dragon: "#004170",
+  electric: "#F2E7AA",
+  fairy: "#E9CDEA",
+  fighting: "#D88EAB",
+  fire: "#EAAB7D",
+  flying: "#A4B8C9",
+  ghost: "#9B9FB9",
+  grass: "#729F92",
+  ground: "#E1A48A",
+  ice: "#B5DCD5",
+  normal: "#BF9762",
+  poison: "#C5A9C4",
+  psychic: "#F3A9A9",
+  rock: "#D2CAB3",
+  steel: "#C8C8C8",
+};
 
 
 export const Container = styled.div`
-    width: 440px;
-    min-width: 440px;
-    height: 263px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    flex-wrap: wrap;
-    padding-top: 53px;
-`
+  width: 100%;
+  max-width: 440px;
+  min-width: 280px;
+  height: 263px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin: 15px 0;
+
+  @media (max-width: 480px) {
+    height: auto;
+    min-height: 230px;
+  }
+`;
 
 export const Conteudo = styled.div`
-    width: 400px;
-    height: 210px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    background-color: blue;
-    background-color: ${props => getColors[props.type] };
+  width: 100%;
+  height: 210px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-radius: 16px;
+  background-color: ${(props) => getColors[props.type] || "#BF9762"};
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+  }
 
-`
-
-export const Detalhes = styled.p`
-    color: white;
-    width: 74px;
-    height: 24px;
-    text-align: center;
-    cursor: pointer;
-
-`
-
-export const Capturar = styled.button`
-    background-color: white;
-    width: 146px;
-    height: 38px;
-    text-align: center;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-
-`
-export const ContainerBotoes = styled.div`
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    width: 395px;
-    height: 38px;
-    justify-content: space-between;
-    
-`
-export const ContainerImg = styled.div`
-    width: 193px;
-    height: 193px;
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin-bottom: 90px;
-
-`
-
-export const ImgPokemons = styled.img`
-    width: 193px;
-    height: 193px;
-    position: absolute;
-    margin-left: 20px;
-`
+  @media (max-width: 480px) {
+    height: auto;
+    min-height: 220px;
+    padding: 18px;
+  }
+`;
 
 export const ContainerAtriImg = styled.div`
-    justify-content: space-around;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 90%;
-    height: 150px;
-`
-export const ContainerAtributos = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    height: 45px;
-    width: 100px;
-    color: white;
-    gap: 2px;
-    font-size: 20px;
-    margin-bottom: 10px;
-`
-export const ContainerPokebola = styled.div`
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    border: solid yellow 2px;
-`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+`;
 
 export const ContainerAtri = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 60%;
+`;
 
-export const Tipo = styled.div`
-    background-color: ${props => getColorsTipos[props.type] };
-    width: 200px;
-    height: 31px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-around;
-    border-radius: 15px;
-    color: white;
-    margin-bottom: 5px;
-    gap: 10px;
-`
+export const ContainerAtributos = styled.div`
+  display: flex;
+  flex-direction: column;
+  color: white;
+  line-height: 1.2;
 
-export const Pokebola = styled.img`
-    width: 280px;
-    margin-top: 90px;
-    height: 150px;
-    color: black;
+  span {
+    font-size: 1rem;
+    font-weight: bold;
+    opacity: 0.85;
+  }
+  strong {
+    font-size: 1.8rem;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
 
-`
+  @media (max-width: 380px) {
+    strong {
+      font-size: 1.4rem;
+    }
+  }
+`;
 
 export const ContainerTipos = styled.div`
-    display: flex;
-    flex-direction: row;
-    width: 100px;
-    justify-content: left;
-    align-items: center;
-    gap: 10px;
-    margin-right: 80px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
 
-`
+export const ContainerImg = styled.div`
+  position: absolute;
+  right: 10px;
+  top: -50px;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+
+  @media (max-width: 480px) {
+    width: 135px;
+    height: 135px;
+    top: -35px;
+    right: 5px;
+  }
+`;
+
+export const ImgPokemons = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 3;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.4));
+`;
+
+export const Pokebola = styled.img`
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 210px;
+  height: 210px;
+  object-fit: cover;
+  object-position: top right;
+  opacity: 0.85;
+  z-index: 1;
+  pointer-events: none;
+  border-top-right-radius: 16px;
+
+  @media (max-width: 480px) {
+    width: 170px;
+    height: 170px;
+  }
+`;
+
+export const ContainerBotoes = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+  z-index: 3;
+`;
+
+export const Detalhes = styled.span`
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #ffde00;
+  }
+`;
+
+export const Capturar = styled.button`
+  padding: 8px 24px;
+  background-color: white;
+  color: #0f0f0f;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    background-color: #f2f2f2;
+  }
+  &:active {
+    transform: scale(1);
+  }
+`;
 
 export default getColors;

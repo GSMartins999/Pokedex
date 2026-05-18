@@ -12,7 +12,6 @@ import {
   Detalhes,
   ImgPokemons,
   Pokebola,
-  Tipo,
 } from "./styled";
 import { goToDetalhes } from "../../Router/cordinator";
 import { GlobalContext } from "../../contexts/GlobalContexts";
@@ -55,6 +54,7 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
     }
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     getAtributos();
   }, []);
@@ -127,16 +127,15 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
     }
 
     return (
-      <div
+      <img
+        src={backgroundImagem}
+        alt={type}
         style={{
-          backgroundImage: `url(${backgroundImagem})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          width: '100%',
-          height: '30px'
+          height: '32px',
+          width: 'auto',
+          objectFit: 'contain'
         }}
-      >
-      </div>
+      />
     );
   };
 
@@ -144,15 +143,15 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
   const tipos = () => {
     if (pokemon.types && pokemon.types.length >= 2) {
       return (
-        <Tipo>
-        <ComponenteComSwitch type={pokemon.types[0].type.name} />
-        <ComponenteComSwitch type={pokemon.types[1].type.name} />
-        </Tipo>
+        <>
+          <ComponenteComSwitch type={pokemon.types[0].type.name} />
+          <ComponenteComSwitch type={pokemon.types[1].type.name} />
+        </>
       );
     } else if (pokemon.types && pokemon.types.length === 1) {
       return <ComponenteComSwitch type={pokemon.types[0].type.name} />;
     } else {
-      return "Tipo não especificado";
+      return null;
     }
   };
 
@@ -174,20 +173,20 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
               : "Tipo não especificado"
           }
         >
+          <Pokebola src={pokebola} />
           <ContainerAtriImg>
             <ContainerAtri>
               <ContainerAtributos>
-                #{pokemon.id}
+                <span>#{pokemon.id}</span>
                 <strong>
                   {capitalizarPrimeiraLetra(pokemon.name || "")}
                 </strong>
               </ContainerAtributos>
               <ContainerTipos>
-                <Tipo>{tipos(type)}</Tipo>
+                {tipos()}
               </ContainerTipos>
             </ContainerAtri>
             <ContainerImg>
-              <Pokebola src={pokebola} />
               <ImgPokemons
                 src={pokemon.sprites?.other["official-artwork"].front_default}
                 alt={pokemon.name}
@@ -200,12 +199,10 @@ export const Card = ({ pokemonsUrl, onDetailsClick }) => {
                        onClick={() => {
                          // Passando o nome e tipos diretamente pela navegação
                          setSelectedPokemon(pokemon);
-                         navigate(`/detalhes/${pokemon.id}`, {
-                           state: {
-                             name: pokemon.name,
-                             types: pokemon.types.map(typeObj => typeObj.type.name), // Passa os tipos como array de strings
-                             id: pokemon.id
-                           }
+                         goToDetalhes(navigate, pokemon.id, {
+                           name: pokemon.name,
+                           types: pokemon.types.map(typeObj => typeObj.type.name), // Passa os tipos como array de strings
+                           id: pokemon.id
                          });
                        }}
                      >

@@ -5,6 +5,7 @@ import { createGlobalStyle } from "styled-components";
 import { Router } from "./Router/Router";
 import { GlobalContext } from "./contexts/GlobalContexts";
 import { BASE_URL } from "./contants";
+import { Modal } from "./components/Modal/Modal";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -18,18 +19,25 @@ function App() {
   const [pokeList, setPokeList] = useState([]);
   const [pokedex, setPokedex] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
+  const [modalState, setModalState] = useState({ isOpen: false, type: '' });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getPokelist();
   }, []);
 
   const getPokelist = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(`${BASE_URL}?limit=150&offset=0`);
-      setPokeList(response.data.results);
+      setTimeout(() => {
+        setPokeList(response.data.results);
+        setIsLoading(false);
+      }, 1200);
     } catch (error) {
       console.log("Erro ao buscar lista de pokemons");
       console.log(error.response);
+      setIsLoading(false);
     }
   };
 
@@ -41,9 +49,8 @@ function App() {
     if (!isAlreadyOnPokedex) {
       const newPokedex = [...pokedex, pokemonToAdd];
       setPokedex(newPokedex);
-
       localStorage.setItem('pokedex', JSON.stringify(newPokedex));
-
+      setModalState({ isOpen: true, type: 'add' });
     }
   };
 
@@ -53,6 +60,7 @@ function App() {
     );
     setPokedex(newPokedex);
     localStorage.setItem('pokedex', JSON.stringify(newPokedex));
+    setModalState({ isOpen: true, type: 'remove' });
   };
 
   // Criando um contexto Global:
@@ -61,7 +69,9 @@ function App() {
     pokedex,
     addToPokedex,
     removeFromPokedex,
+    selectedPokemon,
     setSelectedPokemon,
+    isLoading,
   };
 
 
@@ -78,6 +88,7 @@ function App() {
     <GlobalContext.Provider value={context}>
       <GlobalStyle />
       <Router />
+      <Modal isOpen={modalState.isOpen} type={modalState.type} onClose={() => setModalState({ isOpen: false, type: '' })} />
     </GlobalContext.Provider>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Header } from "../../components/Header/Header";
 import { GlobalContext } from "../../contexts/GlobalContexts";
 import {
@@ -15,11 +15,12 @@ import {
   ProgressBarContainer,
   ProgressBarFiller,
   ProgressBarLabel,
-  Pokebola,
   NameAndTypes,
   TypeBadge,
   ContainerPokebola,
+  Moves,
 } from "./styled";
+import { Loading } from "../../components/Loading/Loading";
 import { BASE_URL } from "../../contants";
 import axios from "axios";
 import pokebola from "../../img/pokebola2.png";
@@ -43,31 +44,42 @@ import water from "../../img/water.png";
 import dark from "../../img/dark.png";
 
 export const DetailsPage = () => {
-  const { pokedex } = useContext(GlobalContext);
+  const { pokedex, setSelectedPokemon: setGlobalSelectedPokemon } = useContext(GlobalContext);
   const { pokemonId } = useParams();
   const [selectedPokemon, setSelectedPokemon] = useState(null);
-  const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const foundPokemonInPokedex = pokedex.find(
-      (pokemon) => pokemon.name === pokemonId
+      (pokemon) => pokemon.name === pokemonId || String(pokemon.id) === pokemonId
     );
 
     if (foundPokemonInPokedex) {
-      setSelectedPokemon(foundPokemonInPokedex);
+      const timer = setTimeout(() => {
+        setSelectedPokemon(foundPokemonInPokedex);
+        if (setGlobalSelectedPokemon) setGlobalSelectedPokemon(foundPokemonInPokedex);
+        setLoading(false);
+      }, 800);
+      return () => clearTimeout(timer);
     } else {
       const fetchPokemonDetails = async () => {
         try {
           const response = await axios.get(`${BASE_URL}/${pokemonId}`);
-          setSelectedPokemon(response.data);
+          setTimeout(() => {
+            setSelectedPokemon(response.data);
+            if (setGlobalSelectedPokemon) setGlobalSelectedPokemon(response.data);
+            setLoading(false);
+          }, 800);
         } catch (error) {
           console.error("Erro ao buscar detalhes do Pokémon", error);
+          setLoading(false);
         }
       };
 
       fetchPokemonDetails();
     }
-  }, [pokedex, pokemonId]);
+  }, [pokedex, pokemonId, setGlobalSelectedPokemon]);
 
   const typeColorMap = {
     water: "#71C3FF",
@@ -102,13 +114,11 @@ export const DetailsPage = () => {
     const color = getProgressBarColor(value);
 
     return (
-      <ProgressBarContainer style={{ display: "flex", alignItems: "center" }}>
-        <ProgressBarLabel style={{ marginRight: "10px" }}>
+      <ProgressBarContainer>
+        <ProgressBarLabel>
           {label}: {value}
         </ProgressBarLabel>
-        <div style={{ flexGrow: 1 }}>
-          <ProgressBarFiller style={{ width: `${percentage}%`, backgroundColor: color }} />
-        </div>
+        <ProgressBarFiller style={{ width: `${percentage}%`, backgroundColor: color }} />
       </ProgressBarContainer>
     );
   };
@@ -118,52 +128,44 @@ export const DetailsPage = () => {
       <Header />
       <ContainerCard>
         <H1>Detalhes</H1>
-        <ContainerAtri style={{ backgroundColor: typeColorMap[selectedPokemon?.types[0]?.type.name] || "white" }}>
-
-
+        {loading || !selectedPokemon ? (
+          <Loading />
+        ) : (
+          <ContainerAtri bgColor={typeColorMap[selectedPokemon?.types[0]?.type.name] || "#1f2024"}>
           <ContainerImgs>
             {selectedPokemon && (
               <>
                 <NameAndTypes>
-                  {selectedPokemon ? (
-                    <>
-                      <h2 style={{ color: "white", marginBottom: "10px", fontSize: "2.5rem" }}>{selectedPokemon.name.charAt(0).toUpperCase() + selectedPokemon.name.slice(1)}</h2>
-                      <p style={{ color: "white", marginBottom: "10px", fontSize: "1.5rem" }}>#{selectedPokemon.id}</p>
-                      <div>
-                        {selectedPokemon.types.map((type) => (
-                          <TypeBadge key={type.type.name}>
-                            <img
-                              src={getTypeImage(type.type.name)} // Adicione a função getTypeImage para obter a imagem correspondente
-                              alt={type.type.name}
-                              style={{ width: "100px", height: "40px", marginRight: "5px" }}
-                            />
-                          </TypeBadge>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <p>Carregando...</p>
-                  )}
+                  <h2 style={{ color: "white" }}>
+                    {selectedPokemon.name.charAt(0).toUpperCase() + selectedPokemon.name.slice(1)}
+                  </h2>
+                  <p style={{ color: "white" }}>#{selectedPokemon.id}</p>
+                  <div>
+                    {selectedPokemon.types.map((type) => (
+                      <TypeBadge key={type.type.name}>
+                        <img
+                          src={getTypeImage(type.type.name)}
+                          alt={type.type.name}
+                        />
+                      </TypeBadge>
+                    ))}
+                  </div>
                 </NameAndTypes>
                 <Img1>
                   <img
-                    src={selectedPokemon.sprites.versions["generation-v"]["black-white"].animated.front_default}
+                    src={selectedPokemon.sprites.versions["generation-v"]["black-white"].animated?.front_default || selectedPokemon.sprites.front_default}
                     alt={selectedPokemon.name}
-                    style={{ width: "200px", height: "200px" }}
                   />
                 </Img1>
                 <Img2>
                   <img
-                    src={selectedPokemon.sprites.versions["generation-v"]["black-white"].animated.back_default}
+                    src={selectedPokemon.sprites.versions["generation-v"]["black-white"].animated?.back_default || selectedPokemon.sprites.back_default}
                     alt={selectedPokemon.name}
-                    style={{ width: "200px", height: "200px" }}
                   />
                 </Img2>
               </>
             )}
           </ContainerImgs>
-
-
 
           <ContainerBaseStats>
             <h2>Base Stats</h2>
@@ -174,13 +176,13 @@ export const DetailsPage = () => {
                     key={stat.stat.name}
                     max={200}
                     value={stat.base_stat}
-                    label={stat.stat.name}
+                    label={stat.stat.name.toUpperCase()}
                   />
                 ))}
                 <ProgressBar
                   max={1000}
                   value={selectedPokemon.stats.reduce((acc, stat) => acc + stat.base_stat, 0)}
-                  label="Total"
+                  label="TOTAL"
                 />
               </Stats>
             )}
@@ -188,64 +190,62 @@ export const DetailsPage = () => {
 
           <ContainerMovimentos>
             {selectedPokemon && (
-              <Stats>
-                <h1>Moves:</h1>
-                <div style={{
-                  maxHeight: "25vh",
-                  overflowY: "auto",
-                  border: "1px solid #ccc",
-                  borderRadius: "5px",
-                  padding: "10px",
-                  height: "25vh",
-                  width: "15vw"
-                }}>
-                  <ul style={{ padding: 0 }}>
+              <Moves>
+                <h1>Moves</h1>
+                <div
+                  style={{
+                    maxHeight: "300px",
+                    overflowY: "auto",
+                    border: "1px solid #e6e6e6",
+                    borderRadius: "12px",
+                    padding: "16px",
+                    width: "100%",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <ul style={{ padding: 0, margin: 0, listStyle: "none" }}>
                     {selectedPokemon.moves.slice(0, 10).map((move) => (
                       <li
                         key={move.move.name}
                         style={{
-                          border: "1px dotted #000",
-                          backgroundColor: "#f0f0f0",
-                          padding: "0.5rem",
-                          margin: "1rem 0",
-                          borderRadius: "5px",
+                          border: "1px solid #e0e0e0",
+                          backgroundColor: "#f9f9f9",
+                          padding: "0.8rem 1rem",
+                          margin: "0.5rem 0",
+                          borderRadius: "8px",
                           fontSize: "1rem",
-                          wordBreak: "break-word",
-                          display: "flex",
-                          flexDirection: "column",
-                          width: "auto"
+                          fontWeight: "600",
+                          color: "#333",
+                          textTransform: "capitalize",
                         }}
                       >
-                        {move.move.name}
+                        {move.move.name.replace("-", " ")}
                       </li>
                     ))}
                   </ul>
                 </div>
-              </Stats>
+              </Moves>
             )}
           </ContainerMovimentos>
+
           <ContainerPokebola>
             {selectedPokemon && (
-              <>
-                <img
-                  src={selectedPokemon.sprites?.other["official-artwork"].front_default}
-                  alt={selectedPokemon.name}
-                  style={{
-                    width: "100%", 
-                    height: "auto",
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%", 
-                    transform: "translate(-50%, -50%)", 
-                    zIndex: 1,
-                  }}
-                  
-                />
-                <Pokebola src={pokebola} alt="Pokebola" />
-              </>
+              <img
+                src={selectedPokemon.sprites?.other["official-artwork"].front_default}
+                alt={selectedPokemon.name}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  maxHeight: "350px",
+                  objectFit: "contain",
+                  position: "relative",
+                  zIndex: 2,
+                }}
+              />
             )}
           </ContainerPokebola>
         </ContainerAtri>
+        )}
       </ContainerCard>
     </>
   );
@@ -271,5 +271,6 @@ const getTypeImage = (type) => {
     case "rock": return rock;
     case "steel": return steel;
     case "water": return water;
+    default: return pokebola;
   }
 };
